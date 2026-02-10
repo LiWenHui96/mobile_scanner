@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -172,6 +173,13 @@ class MethodChannelMobileScanner extends MobileScannerPlatform {
           message: error.message,
         ),
       );
+    }
+  }
+  
+  @override
+  Future<void> initialize() async {
+    if (Platform.isAndroid){
+      await methodChannel.invokeMethod('initDeviceOrientation');
     }
   }
 

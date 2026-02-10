@@ -28,10 +28,10 @@ import com.google.mlkit.vision.barcode.ZoomSuggestionOptions
 class MobileScannerHandler(
     private val activity: Activity,
     private val barcodeHandler: BarcodeHandler,
-    binaryMessenger: BinaryMessenger,
+    private val binaryMessenger: BinaryMessenger,
     private val permissions: MobileScannerPermissions,
     private val addPermissionListener: (RequestPermissionsResultListener) -> Unit,
-    textureRegistry: TextureRegistry): MethodChannel.MethodCallHandler {
+    private val textureRegistry: TextureRegistry): MethodChannel.MethodCallHandler {
 
     private val analyzeImageErrorCallback: AnalyzerErrorCallback = {
         Handler(Looper.getMainLooper()).post {
@@ -96,14 +96,7 @@ class MobileScannerHandler(
             "dev.steenbakker.mobile_scanner/scanner/method")
         methodChannel!!.setMethodCallHandler(this)
 
-        val deviceOrientationListener = DeviceOrientationListener(activity)
 
-        deviceOrientationChannel = EventChannel(binaryMessenger,
-            "dev.steenbakker.mobile_scanner/scanner/deviceOrientation")
-        deviceOrientationChannel!!.setStreamHandler(deviceOrientationListener)
-
-        mobileScanner = MobileScanner(
-            activity, textureRegistry, callback, errorCallback, deviceOrientationListener)
     }
 
     fun dispose(activityPluginBinding: ActivityPluginBinding) {
@@ -126,6 +119,7 @@ class MobileScannerHandler(
     @ExperimentalGetImage
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
+            "initDeviceOrientation" ->initDeviceOrientation(result)
             "state" -> result.success(permissions.hasCameraPermission(activity))
             "request" -> permissions.requestPermission(
                 activity,
@@ -153,6 +147,33 @@ class MobileScannerHandler(
             "updateScanWindow" -> updateScanWindow(call, result)
             "setFocus" -> setFocus(call, result)
             else -> result.notImplemented()
+        }
+    }
+
+    private fun initDeviceOrientation(result: MethodChannel.Result) {
+
+        try {
+            val deviceOrientationListener = DeviceOrientationListener(activity)
+
+            deviceOrientationChannel = EventChannel(binaryMessenger,
+                "dev.steenbakker.mobile_scanner/scanner/deviceOrientation")
+            deviceOrientationChannel!!.setStreamHandler(deviceOrientationListener)
+
+            mobileScanner = MobileScanner(
+                activity, textureRegistry, callback, errorCallback, deviceOrientationListener)
+            result.success(null)
+        } catch (e: ZoomWhenStopped) {
+            result.error(
+                MobileScannerErrorCodes.INIT_ERROR,
+                "init error",
+                null
+            )
+        } catch (e: Exception) {
+            result.error(
+                MobileScannerErrorCodes.INIT_ERROR,
+                "init error",
+                null
+            )
         }
     }
 

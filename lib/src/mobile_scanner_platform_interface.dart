@@ -29,6 +29,11 @@ abstract class MobileScannerPlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  /// Initialize the platform.
+  /// Android 需要
+  Future<void> initialize() {
+    throw UnimplementedError('initialize() has not been implemented.');
+  }
   /// Get the stream of barcode captures.
   Stream<BarcodeCapture?> get barcodesStream {
     throw UnimplementedError('barcodesStream has not been implemented.');

@@ -2,6 +2,7 @@ package dev.steenbakker.mobile_scanner.objects
 
 class MobileScannerErrorCodes {
     companion object {
+        const val INIT_ERROR = "init_error"
         const val ALREADY_STARTED_ERROR = "MOBILE_SCANNER_ALREADY_STARTED_ERROR"
         const val ALREADY_STARTED_ERROR_MESSAGE = "The scanner was already started."
         const val ANALYZE_IMAGE_NO_VALID_IMAGE_ERROR_MESSAGE = "The provided file is not an image."

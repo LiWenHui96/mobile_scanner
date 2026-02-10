@@ -19,6 +19,11 @@ class MobileScannerSimple extends StatefulWidget {
 
 class _MobileScannerSimpleState extends State<MobileScannerSimple> {
   Barcode? _barcode;
+  @override
+  void initState() {
+    MobileScannerPlatform.instance.initialize();
+    super.initState();
+  }
 
   Widget _barcodePreview(Barcode? value) {
     if (value == null) {

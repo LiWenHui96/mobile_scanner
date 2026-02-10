@@ -69,6 +69,11 @@ class MobileScannerWeb extends MobileScannerPlatform {
   }
 
   @override
+  Future<void> initialize()async{
+
+  }
+
+  @override
   Stream<BarcodeCapture?> get barcodesStream => _barcodesController.stream;
 
   @override
