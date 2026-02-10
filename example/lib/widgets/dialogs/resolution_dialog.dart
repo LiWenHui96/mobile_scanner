@@ -94,12 +94,12 @@ class _ResolutionDialogState extends State<ResolutionDialog> {
         children: [
           TextField(
             controller: widthController,
-            keyboardType: TextInputType.number,
+            keyboardType: .number,
             decoration: const InputDecoration(labelText: 'Width'),
           ),
           TextField(
             controller: heightController,
-            keyboardType: TextInputType.number,
+            keyboardType: .number,
             decoration: const InputDecoration(labelText: 'Height'),
           ),
         ],

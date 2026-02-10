@@ -1119,6 +1119,9 @@ extension VNBarcodeObservation {
             }
         }
 
+        // Detect barcode type from payload string value using heuristics
+        let barcodeType = payloadStringValue?.detectBarcodeType()
+
         let data = [
             // Clockwise, starting from the top-left corner.
             "corners":  [
@@ -1135,6 +1138,7 @@ extension VNBarcodeObservation {
                 "width": width,
                 "height": height,
             ],
+            "type": barcodeType,
         ] as [String : Any?]
         return data
     }
